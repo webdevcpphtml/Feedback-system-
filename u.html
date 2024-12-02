@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 80%;
+            margin: 50px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Feedback System</h1>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Section</th>
+                <th>Feedback</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+    <button onclick="addData()">Add Feedback</button>
+    <script>
+      
+        function loadData() {
+            let storedData = localStorage.getItem("feedbackData");
+            if (storedData) {
+                return JSON.parse(storedData);
+            } else {
+                return []; 
+            }
+        }
+
+        // Function to save data to localStorage
+        function saveData(data) {
+            localStorage.setItem("feedbackData", JSON.stringify(data));
+        }
+
+        let data = loadData(); // Load data from localStorage
+
+        // Function to display the data in the table
+        function displayData() {
+            const tableBody = document.querySelector("#dataTable tbody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            data.forEach(item => {
+                const row = tableBody.insertRow();
+                const nameCell = row.insertCell();
+                const ageCell = row.insertCell();
+                const cityCell = row.insertCell();
+                const deleteCell = row.insertCell();
+
+                nameCell.textContent = item.name;
+                ageCell.textContent = item.age;
+                cityCell.textContent = item.city;
+                deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>'; // Add a delete button
+            });
+        }
+
+        // Function to add new data to the array
+        function addData() {
+            const name = prompt("Enter name:");
+            const age = prompt("Enter section:");
+            const city = prompt("Enter feedback:");
+
+            data.push({ name: name, age: age, city: city });
+            saveData(data); // Save data to localStorage
+            displayData();
+        }
+
+        // Function to delete a row from the table
+        function deleteRow(button) {
+            const row = button.parentNode.parentNode;
+            const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+            data.splice(rowIndex, 1);
+            saveData(data); // Save data to localStorage
+            displayData();
+        }
+
+        // Initial display of data
+        displayData();
+    </script>
+</body>
+</html>
